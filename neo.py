@@ -1,7 +1,9 @@
 from neo4j import GraphDatabase
 from pydantic import BaseModel, field_validator, ConfigDict
-from typing import Any, Dict
 from engine import invert_formula
+from dotenv import load_dotenv
+
+load_dotenv()
 
 driver = GraphDatabase.driver(
     "bolt://localhost:7687",
@@ -55,7 +57,7 @@ def store_conversion(relation: ConversionRelation):
 
     if inverse_formula_exists:
         print("Inverse formula exists already")
-        return  # nothing more to do
+        return 
 
     try:
         inverse_formula = invert_formula(relation.formula)

@@ -49,7 +49,7 @@ class GenerateQuestions(dspy.Module):
         super().__init__()
         self.predict = dspy.Predict(QuestionSignature)
 
-    def forward(self, count: int, prompt: str):
+    def forward(self, count: int, prompt: str) -> GeneratedQuestions:
         """
         :param count: Number of questions to generate
         :param prompt: Optional custom prompt to guide the LLM
