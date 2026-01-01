@@ -1,6 +1,4 @@
 from extract import ExtractUnits, ask_formula
-from engine import parse_formula, invert_formula
-from neo import lookup_conversion, store_conversion, ConversionRelation
 from generate_questions import genq
 from mass_edge_storage import save_all_conversions
 from timing import timeit
@@ -9,12 +7,22 @@ extractor = ExtractUnits()  # instantiate the unit extractor
 
 @timeit
 def training_loop(cycles: int, questions_per_cycle: int) -> None:
+    """
+    Runs the unit conversion training pipeline.
+
+    Steps:
+    1. Generate unit conversion questions
+    2. Extract source and target units
+    3. Generate conversion formulas
+    4. Store conversions in the graph
+    """
+
     print(f"Starting training for {cycles} cycles...\n")
 
     for i in range(cycles):
         print(f"--- Cycle {i+1} ---")
 
-        # STEP 1: Ask the GPT to give me questions of unit conversions -> "how do I convert centimeter to meter?"
+        # STEP 1: Ask the LLM to give me questions of unit conversions -> "how do I convert centimeter to meter?"
         generated_questions = genq(
             count = questions_per_cycle,
             prompt = "Give me strings of unit conversion questions. The units must be simple and commonly used."

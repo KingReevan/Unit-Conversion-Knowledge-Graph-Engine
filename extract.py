@@ -15,21 +15,19 @@ class ExtractedUnits(BaseModel):
     from_unit: str
     to_unit: str
 
-
 class FormulaResult(BaseModel):
     formula: str
 
 #Signature to extract and validate conversion units, returns pydantic
 class ExtractUnits(dspy.Module):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.extract = dspy.Predict("question -> from_unit, to_unit")
 
-    def forward(self, question: str):
-        raw = self.extract(question=question)
-        ext = ExtractedUnits.model_validate(raw.toDict())
-        return ext
-
+    def forward(self, question: str) -> ExtractedUnits:
+        raw_units = self.extract(question=question)
+        cleaned_units = ExtractedUnits.model_validate(raw_units.toDict())
+        return cleaned_units
 
 class AskFormula(dspy.Module):
 
@@ -55,11 +53,11 @@ class AskFormula(dspy.Module):
             type=str
         )
 
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__()
         self.predict = dspy.Predict(self.FormulaSignature)
 
-    def forward(self, from_unit, to_unit):
+    def forward(self, from_unit: str, to_unit: str) -> FormulaResult:
         """
         Docstring for forward
         
